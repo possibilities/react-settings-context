@@ -4,6 +4,8 @@ A [React](https://github.com/facebook/react) context that provides data storage 
 
 This library is most useful in the context of building demo or prototype apps with server side rendering.
 
+[View demo](https://react-settings-context.arthack.io)
+
 ## Usage
 
 1. Install the helper in your [Next.js](https://nextjs.org) app
@@ -120,4 +122,4 @@ This library is most useful in the context of building demo or prototype apps wi
 
 ## Why not [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)?
 
-The main motivation of this library is to enable the rapid production of demo/prototype apps on the Next.js framework (SSR javascript). Using localStorage in this context will cause [a visible re-render] each time a page is rendered on the server and then continued on the client because the server will render with the default values irrespecitive of `localStorage` and then the client will have to re-render with the `localStorage` values.
+The main motivation of this library is to enable the rapid production of demo/prototype apps on the Next.js framework (SSR javascript). Using localStorage in this context will cause (a visible re-render)[https://localstorage-settings-demo.arthack.io] each time a page is rendered on the server and then continued on the client because the server will render with the default values irrespecitive of `localStorage` and then the client will have to re-render with the `localStorage` values.
