@@ -1,0 +1,24 @@
+{
+  "name": "react-settings-context-example",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "dev": "npm-run-all --race --parallel dev:lint \"dev:run -- {@}\" --",
+    "build": "next build",
+    "start": "next start",
+    "test": "standard",
+    "lint": "standard",
+    "dev:run": "next dev",
+    "dev:lint": "sleep 5 && yarn lint-watch",
+    "lint-watch": "nodemon --quiet --exec 'standard && echo linting: OK' --watch '**/*.js' --ignore node_modules"
+  },
+  "dependencies": {
+    "next": "^8.0.3",
+    "react": "16.8.4",
+    "react-dom": "16.8.4",
+    "react-settings-context": "file:.."
+  },
+  "devDependencies": {
+    "standard": "^12.0.1"
+  }
+}
