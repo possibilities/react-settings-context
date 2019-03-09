@@ -1,9 +1,9 @@
 {
   "version": 2,
-  "name": "react-context-settings",
+  "name": "react-settings-context",
   "public": true,
   "builds": [
     { "src": "next.config.js", "use": "@now/next" }
   ],
-  "alias": "react-context-settings.arthack.io"
+  "alias": "react-settings-context.arthack.io"
 }
