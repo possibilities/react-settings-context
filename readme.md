@@ -10,7 +10,7 @@ This library is most useful in the context of building demo or prototype apps wi
 
 1. Install the helper in your [Next.js](https://nextjs.org) app
 
-   ```ShellSession
+   ```Shell
    yarn add react-settings-context
    ```
 
