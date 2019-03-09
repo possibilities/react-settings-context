@@ -15,15 +15,7 @@ export default {
     peerDepsExternal(),
     babel({
       runtimeHelpers: true,
-      exclude: 'node_modules/**',
-      presets: [
-        [
-          '@babel/preset-env',
-          { 'modules': false }
-        ],
-        '@babel/preset-react'
-      ],
-      plugins: ['@babel/transform-runtime']
+      exclude: 'node_modules/**'
     }),
     resolve(),
     commonjs(),

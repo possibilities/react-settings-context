@@ -4,10 +4,10 @@ import { useState } from 'react'
 export default function useStateWithCookie (initialData) {
   const [Cookie] = useState(configureCookie({ name: initialData.name }))
   const [settings, saveSettings] = useState(initialData.data)
-  const patchSettings = newSettings => {
-    const patch = { ...settings, ...newSettings }
-    saveSettings(patch)
-    Cookie.setAll(patch)
+  const patchSettings = patch => {
+    const newSettings = { ...settings, ...patch }
+    saveSettings(newSettings)
+    Cookie.set(newSettings)
   }
   return [settings, patchSettings]
 }

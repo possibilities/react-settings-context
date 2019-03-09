@@ -118,8 +118,28 @@ This library is most useful in the context of building demo or prototype apps wi
 
 1. Configuring cookie (optional)
 
-   TODO write some words about this
+   Cookie reading/writing behavior and configuration can be controlled by passing an options object to either `getInitialPropsWithAppSettings` or `getAppSettingsFromCookie`. Reasonable defaults are in place and in many cases configuration won't be necessary. The options listed here are used as described and all other values will be passed to the underlying cookie parsing library.
+
+   ## API
+
+   ### `getAppSettingsFromCookie`/`getInitialPropsWithAppSettings`
+
+   #### `name`
+
+   The name of the cookie. Useful if you will run more than one app on thee same domain. Defaults to `app-settings`
+
+   #### `req`
+
+   The (incoming server-side request)[https://nodejs.org/api/http.html#http_class_http_incomingmessage]. This is used both to denote that the cookie is being read server-side and to expose the cookie headers to the library.
+
+   ### Passed to cookie parsing library
+
+   The following values supplied are by this library as defaults and passed to the [cookie](https://github.com/jshttp/cookie) library are not passed in
+
+   * `maxAge`: `2592000` (2 weeks in ms)
+   * `secure` set to true if window location protocol is `https`
+   * `domain` set to the domain found in current window location
 
 ## Why not [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)?
 
-The main motivation of this library is to enable the rapid production of demo/prototype apps on the Next.js framework (SSR javascript). Using localStorage in this context will cause (a visible re-render)[https://localstorage-settings-demo.arthack.io] each time a page is rendered on the server and then continued on the client because the server will render with the default values irrespecitive of `localStorage` and then the client will have to re-render with the `localStorage` values.
+The main motivation of this library is to enable the rapid production of demo/prototype apps on the Next.js framework (SSR javascript). Using localStorage in this context will cause (a visible re-render)[https://localstorage-settings-demo.arthack.io] each time a page is rendered on the server and then continued on the client because the server will render with the default values irrespective of `localStorage` and then the client will have to re-render with the `localStorage` values.

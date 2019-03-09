@@ -1,16 +1,10 @@
-const oneMonth = 60 * 60 * 24 * 30
+import Cookie from 'cookie'
 
-function stringifyCookie (cookieName, body, cookie) {
-  return [
-    `${cookieName}=${encodeURIComponent(JSON.stringify(body))}`,
-    `Max-Age=${cookie.maxAge}`,
-    `Domain=${cookie.domain}`,
-    cookie.secure && 'Secure',
-    cookie.sameSite && `SameSite=Strict`
-  ]
-    .filter(Boolean)
-    .join('; ') + ';'
-}
+const oneMonthSeconds = 60 * 60 * 24 * 30
+
+// A helper for reading/writing cookies in SRR apps. There's no security claims
+// made here as this library is not meant to be used in production apps.
+// Writing cookies on the server is not supported.
 
 const parseOrNull = str => {
   try {
@@ -21,52 +15,48 @@ const parseOrNull = str => {
 }
 
 const parseCookie = (cookieName, headersOrDocument) => {
-  if (!headersOrDocument.cookie) return {}
-
-  const cookie = headersOrDocument.cookie
-    .split(/; */)
-    .map(cookieString => cookieString.split('='))
-    .map(([key, ...parts]) => [key, parts.join('=')])
-    .filter(([key, val]) => key === cookieName)
-    .map(([key, val]) => [key, parseOrNull(val)])
-    .filter(([key, val]) => !!val)
-    .map(([key, val]) => val)
-    .pop()
-
-  return cookie || {}
+  if (headersOrDocument.cookie) {
+    const cookie = Cookie.parse(headersOrDocument.cookie)[cookieName]
+    const parsed = parseOrNull(cookie)
+    if (parsed) return parsed
+  }
+  return {}
 }
 
 const configureCookie = (options = {}) => {
   // Get a cookie name for the cookie or make one
-  const { name: cookieName = 'context-settings' } = options
+  const {
+    win: windowOverride,
+    req: incomingRequest,
+    name: cookieName = 'app-settings',
+    ...cookiesSettingsOverrides
+  } = options
+  const win = process.browser && (windowOverride || window)
 
   return {
-    getAll: () => {
-      const headersOrDocument = options.req
-        ? options.req.headers
-        : window.document
+    get: () => {
+      const headersOrDocument = incomingRequest
+        ? incomingRequest.headers
+        : win.document
       return parseCookie(cookieName, headersOrDocument)
     },
-    setAll: cookie => {
-      window.document.cookie =
-        stringifyCookie(
-          cookieName,
-          cookie,
-          {
-            sameSite: options.sameSite === undefined
-              ? true
-              : options.sameSite,
-            maxAge: options.maxAge === undefined
-              ? oneMonth
-              : options.maxAge,
-            secure: options.secure === undefined
-              ? window.location.protocol === 'https'
-              : options.secure,
-            domain: options.domain === undefined
-              ? window.location.hostname
-              : options.domain
-          }
-        )
+    set: cookie => {
+      if (!process.browser) {
+        throw new Error('Cannot write cookie on the server with this library')
+      }
+      const cookiesDefaults = {
+        sameSite: true,
+        maxAge: oneMonthSeconds,
+        secure: win.location.protocol === 'https',
+        domain: win.location.hostname
+      }
+      const cookieJson = JSON.stringify(cookie)
+      const cookiesSettings = {
+        ...cookiesDefaults,
+        ...cookiesSettingsOverrides
+      }
+      win.document.cookie =
+        Cookie.serialize(cookieName, cookieJson, cookiesSettings)
     }
   }
 }
