@@ -5,11 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "NODE_ENV=production rollup -c -w",
-    "release": "release",
-    "release:publish": "npm publish",
     "prepublishOnly": "yarn build",
     "build": "NODE_ENV=production rollup -c",
     "test": "ava --verbose",
+    "release": "release",
     "lint": "standard",
     "lint-watch": "nodemon --quiet --exec 'standard && echo linting: OK' --watch '**/*.js' --ignore node_modules"
   },
